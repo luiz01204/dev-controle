@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛠️ Dev Controle
 
-## Getting Started
+Sistema para **gerenciar atendimentos de chamados**, feito com Next.js. Tem login com Google, rotas protegidas, e até um canal desprotegido pros clientes abrirem chamados com e-mail. Simples, direto e funcional.
 
-First, run the development server:
+## 🔥 Funcionalidades
+
+- Login com conta do **Google** (via NextAuth)
+- Rotas protegidas para usuários autenticados
+- Cadastro de **clientes**
+- Criação de **chamados** vinculados aos clientes
+- Página `/open` onde o **cliente pode abrir chamado** usando só o e-mail (rota desprotegida)
+- Cada usuário só vê os dados dos seus próprios clientes/chamados
+
+## 🧪 Tecnologias Usadas
+
+- [Next.js 15](https://nextjs.org/)
+- [React 19](https://react.dev/)
+- [NextAuth.js](https://next-auth.js.org/) com Google OAuth
+- [Prisma ORM](https://www.prisma.io/) + MongoDB
+- [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/) pra validação
+- [Tailwind CSS](https://tailwindcss.com/) na estilização
+- [Axios](https://axios-http.com/) para requisições
+- [React Icons](https://react-icons.github.io/react-icons/) para ícones
+
+## 📦 Instalação
+
+```bash
+git clone https://github.com/seu-user/dev-controle
+cd dev-controle
+npm install
+```
+
+## 🛡️ Variáveis de Ambiente
+
+Crie um arquivo `.env.local` na raiz do projeto e adicione as variáveis abaixo:
+
+```env
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+DATABASE_URL="your-mongodb-connection-string"
+NEXTAUTH_URL=http://localhost:3000
+AUTH_SECRET=your-random-secret
+```
+
+> 💡 Dica: Gere um `AUTH_SECRET` com algo tipo `openssl rand -base64 32`.
+
+## 🚀 Rodando o projeto
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acesse: [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🧠 Estrutura de pastas
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+/app
+ └── (rotas do Next 13+)
+/lib
+ └── (configs de auth, prisma, etc)
+/components
+ └── (componentes reutilizáveis)
+```
 
-## Learn More
+## 📢 Observações
 
-To learn more about Next.js, take a look at the following resources:
+- A rota `/open` é **pública** e permite que os **clientes abram chamados** com base no e-mail cadastrado.
+- Os dados são separados por usuário. Cada um vê **apenas seus próprios chamados/clientes**.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ✌️ Licença
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
