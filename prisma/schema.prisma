@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  phone     String
+  email     String
+  address   String?
+  create_at DateTime? @default(now())
+  update_at DateTime? @default(now()) // Considere @updatedAt para atualização automática
+
+  tickets Ticket[]
+
+  userId String @db.ObjectId
+  user   User?  @relation(fields: [userId], references: [id])
+}
+
+model Ticket {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  status      String
+  create_at   DateTime? @default(now())
+  update_at   DateTime? @default(now()) // Considere @updatedAt para atualização automática
+
+  customerId String?   @db.ObjectId
+  customer   Customer? @relation(fields: [customerId], references: [id])
+
+  userId String? @db.ObjectId
+  user   User?   @relation(fields: [userId], references: [id])
+}
+
+// Modelos do NextAuth.js / Auth.js
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+
+  // Seus relacionamentos customizados
+  tickets       Ticket[]
+  customers     Customer[]
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? // Para MongoDB, String é geralmente ok. Se muito longo, @db.String não é um tipo específico, mas String ilimitada.
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade) // Adicionado onDelete: Cascade
+
+  // ---> CORREÇÃO PRINCIPAL AQUI <---
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade) // Adicionado onDelete: Cascade
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  id String   @id @default(auto()) @map("_id") @db.ObjectId
+}
