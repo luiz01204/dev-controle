@@ -3,11 +3,7 @@
   "outputDirectory": ".next",
   "functions": {
     "api/**.js": {
-      "includeFiles": [
-        "node_modules/.prisma/client/**",
-        "node_modules/@prisma/client/**",
-        "prisma/schema.prisma"
-      ]
+      "includeFiles": "vercel-include/**"
     }
   }
 }
