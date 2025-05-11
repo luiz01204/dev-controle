@@ -1,18 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { FiHome, FiLogOut, FiLoader, FiLock, FiPlusCircle} from "react-icons/fi";
-import { signIn, signOut, useSession } from "next-auth/react"
-import { redirect } from "next/navigation"
+import { FiHome, FiLogOut, FiLoader, FiLock, FiPlusCircle } from "react-icons/fi";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Header() {
-    const { status, data} = useSession();
+    const { status } = useSession();
+    const router = useRouter();
 
-    async function handleLogin(){
+    // Redireciona automaticamente após login
+    useEffect(() => {
+        if (status === "authenticated") {
+            router.push("/dashboard");
+        }
+    }, [status, router]);
+
+    async function handleLogin() {
         await signIn(); 
     }
 
-    async function handleLogout(){
+    async function handleLogout() {
         await signOut();
     }
 
@@ -26,13 +35,11 @@ export default function Header() {
                 </Link>
             </div>
             <div className="flex gap-4 pr-2">
-
                 {status === "loading" && (
                     <button className="animate-spin">
                         <FiLoader size={26} />
                     </button>
                 )}
-
                 {status === "unauthenticated" && (
                     <>
                         <Link href={"/open"} className="hover:text-green-500">
@@ -43,7 +50,6 @@ export default function Header() {
                         </button>
                     </>
                 )}
-
                 {status === "authenticated" && (
                     <>
                         <Link href="/dashboard" className="hover:text-blue-500">
@@ -56,5 +62,5 @@ export default function Header() {
                 )}
             </div>
         </header>
-      );
+    );
 }
